@@ -42,7 +42,7 @@ Toolkit.run<Inputs>(
     const pr = await github.pulls.get({
       owner: context.repo.owner,
       pull_number,
-      repo: context.repo.owner,
+      repo: context.repo.repo,
     });
     assert.ok(pr, "pr undefined");
 

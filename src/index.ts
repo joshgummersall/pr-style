@@ -46,30 +46,24 @@ Toolkit.run<Inputs>(
     });
     assert.ok(pr, "pr undefined");
 
-    const {
-      _links: { issue: linkedIssue },
-      body: prBody,
-      title: prTitle,
-      user: prAuthor,
-    } = pr.data;
+    const { body, title, user } = pr.data;
 
-    if (skipAuthors.has(prAuthor.login)) {
-      tools.log(`skipping for author ${prAuthor.login}`);
-      return;
-    }
+    if (!skipAuthors.has(user.login)) {
+      if (titlePrefixes.length) {
+        assert.ok(
+          titlePrefixes.some((prefix) => title.startsWith(prefix)),
+          `Title must start with one of ${titlePrefixes.join(", ")}`
+        );
+      }
 
-    if (titlePrefixes.length) {
-      assert.ok(
-        titlePrefixes.some((prefix) => prTitle.startsWith(prefix)),
-        `PR title must start with one of ${titlePrefixes.join(", ")}`
-      );
-    }
-
-    if (requireIssue && !linkedIssue) {
-      assert.ok(
-        prBody.includes("#minor"),
-        'PR must be linked to an issue or include the text "#minor"'
-      );
+      if (requireIssue) {
+        assert.ok(
+          /((refs?|close(d|s)?|fix(ed|es)?) ((\#\d+)|(https?:\/\/.+\/.+\/.+\/issues\/\d+)))|(#minor)|(#release)/i.test(
+            body
+          ),
+          'Description must include a linked issue or "#minor"'
+        );
+      }
     }
   },
   {

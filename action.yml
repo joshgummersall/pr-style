@@ -1,0 +1,20 @@
+name: PR Style
+description: Lints pull request title and body to ensure they conform to a style guide
+
+branding:
+  icon: briefcase
+  color: purple
+
+runs:
+  using: node12
+  main: lib/index.js
+
+inputs:
+  require_issue:
+    description: Require PRs to have a linked issue
+
+  skip_authors:
+    description: Comma separated list of authors to skip
+
+  title_prefixes:
+    description: Comma separated list of PR title prefixes

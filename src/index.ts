@@ -52,16 +52,21 @@ Toolkit.run<Inputs>(
       if (titlePrefixes.length) {
         assert.ok(
           titlePrefixes.some((prefix) => title.startsWith(prefix)),
-          `Title must start with one of ${titlePrefixes.join(", ")}`
+          `Pull request title must begin with one of "${titlePrefixes.join(
+            '", "'
+          )}"`
         );
       }
 
       if (requireIssue) {
         assert.ok(
-          /((refs?|close(d|s)?|fix(ed|es)?) ((\#\d+)|(https?:\/\/.+\/.+\/.+\/issues\/\d+)))|(#minor)|(#release)/i.test(
+          /((refs?|close(d|s)?|fix(ed|es)?)(:)?\s*((\#\d+)|(https?:\/\/.+\/.+\/.+\/issues\/\d+)))|(#minor)|(#release)/i.test(
             body
           ),
-          'Description must include a linked issue or "#minor"'
+          [
+            'Pull request description must include a linked issue or "#minor".',
+            'Link an issue by typing "fixes #123" or "closes: https://github.com/owner/repo/issues/123"',
+          ].join("\n")
         );
       }
     }
